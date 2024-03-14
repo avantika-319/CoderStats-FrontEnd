@@ -1,12 +1,15 @@
 
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
+import CardCodeforces from "./components/CardCodeforces";
+import CardLeetCode from "./components/Cardleetcode";
 
 function App() {
   const URL = "https://coder-stats.vercel.app";
   const [platform, setPlatform] = useState(""); //which platform data to get
   const [userName, setUsername] = useState("");
-  const [userProfile, setUserProfile] = useState({});
+  const [userProfile, setUserProfile] = useState(null);
 
   const handleSelectChange = (event)=>{
     setPlatform(event.target.value)
@@ -105,56 +108,57 @@ function App() {
 
   return (
     <div className="App">
-      <select value={platform} onChange={handleSelectChange}>
+      {/*<select value={platform} onChange={handleSelectChange}>
         <option value="Select Platform">Select Platform</option>
         <option value="codeforces">codeforces</option>
         <option value="leetcode">leetcode</option>
+  </select>*/}
 
-      </select>
-      <p>{platform}</p>
+  <Box sx={{mt:2}}> 
+  <FormControl sx={{minWidth : 120}}>
+    <InputLabel id="demo-simple-select-label">Platform</InputLabel>
+    <Select
+      labelId="demo-simple-select-label"
+      id="demo-simple-select"
+      value={platform}
+      label="Platform"
+      onChange={handleSelectChange}
+    >
+      <MenuItem value="Select Platform">Select Platform</MenuItem>
+      <MenuItem value="codeforces">Codeforces</MenuItem>
+      <MenuItem value="leetcode">leetcode</MenuItem>
+    </Select>
+  </FormControl>
+  </Box>
 
-      <input 
+      {/*<p>{platform}</p>*/}
+
+      {/* <input 
         type="text"
         //value={username}
         placeholder="Enter username"
         onChange={handleInputChange}
-      />
+      /> */}
 
-      <p>{userName}</p>
+      <Box sx={{mt:3}}>
+      <TextField label="Username" variant="outlined" onChange={handleInputChange}/>
+      </Box>
 
-      <button onClick={fetchProfile}>GET</button>
+      {/* <p>{userName}</p> */}
+
+      {/* <button onClick={fetchProfile}>GET</button> */}
+
+      <Button variant="contained" onClick={fetchProfile} sx={{mt:1}}>GET</Button>
 
       {
         (userProfile && platform === 'codeforces') && (
-          <div> 
-          <div style={{'display':'flex', 'flexDirection':'row'}}> <h5>Handle:</h5>  <h5>{userProfile.handle}</h5> </div>
-          <div style={{'display':'flex', 'flexDirection':'row'}}> <h5>Rank: </h5><h5>{userProfile.rank}</h5></div>
-          <div style={{'display':'flex', 'flexDirection':'row'}}> <h5>Rating:</h5> <h5>{userProfile.rating}</h5></div>
-          <div style={{'display':'flex', 'flexDirection':'row'}}><h5>MaxRank: </h5> <h5>{userProfile.maxRank}</h5></div>
-          <div style={{'display':'flex', 'flexDirection':'row'}}><h5>MaxRating:</h5> <h5> {userProfile.maxRating}</h5></div>
-          <div style={{'display':'flex', 'flexDirection':'row'}}><h5>Friend:</h5> <h5> {userProfile.friends}</h5></div>
-          <div style={{'display':'flex', 'flexDirection':'row'}}><h5>Questions:</h5> <h5> {userProfile.questionSolved}</h5></div>
-          </div>
+          <CardCodeforces userProfile={userProfile}/>
         )
-        }
-        {
+      }
+
+      {
         (userProfile && platform === 'leetcode') && (
-          <div>
-          <div style={{'display':'flex', 'flexDirection':'row'}}><h5>Avatar:</h5> <img src={userProfile.userAvatar}/></div>
-          <div style={{'display':'flex', 'flexDirection':'row'}}> <h5>Handle:</h5>  <h5>{userProfile.username}</h5> </div>
-          <div style={{'display':'flex', 'flexDirection':'row'}}> <h5>Rank: </h5><h5>{userProfile.ranking}</h5></div>
-          <div style={{'display':'flex', 'flexDirection':'row'}}> <h5>Rating:</h5> <h5>{userProfile.rating}</h5></div>
-          <div style={{'display':'flex', 'flexDirection':'row'}}><h5>Badge: </h5> <h5>{userProfile.badge.name}</h5></div>
-          <div style={{'display':'flex', 'flexDirection':'row'}}><h5>Contest Attended:</h5> <h5> {userProfile.attendedContestsCount}</h5></div>
-          <div><h5>problemSolved</h5></div>
-          <>
-          {
-            userProfile.languageProblemCount.map((item,index)=>{
-             return <div key={index} style={{'display':'flex', 'flexDirection':'row'}}><h5>{item.languageName} : </h5> <h5> {item.problemsSolved}</h5></div>
-            })
-          }
-          </>
-        </div>
+        <CardLeetCode userProfile={userProfile}/>
         )
       } 
     </div>
