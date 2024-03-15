@@ -3,17 +3,18 @@ import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } fro
 import axios from "axios";
 import { useState } from "react";
 import CardCodeforces from "./components/CardCodeforces";
-import CardLeetcode from "./components/CardLeetcode";
+import CardLeetCode from "./components/Cardleetcode";
 
 function App() {
   const URL = "https://coder-stats.vercel.app";
-  const [platform, setPlatform] = useState(""); //which platform data to get
+  const [platform, setPlatform] = useState("Select Platform"); //which platform data to get
   const [userName, setUsername] = useState("");
   const [userProfile, setUserProfile] = useState(null);
 
   //null -> explicitly null memory entity
   //empty array -> [] != null
   //empty object -> {} != null
+  const [userProfile, setUserProfile] = useState(null);
 
   const handleSelectChange = (event)=>{
     setPlatform(event.target.value)
@@ -112,30 +113,30 @@ function App() {
 
   return (
     <div className="App">
-      {/* <select value={platform} onChange={handleSelectChange}>
+      {/*<select value={platform} onChange={handleSelectChange}>
         <option value="Select Platform">Select Platform</option>
         <option value="codeforces">codeforces</option>
         <option value="leetcode">leetcode</option>
+  </select>*/}
 
-      </select> */}
-      <Box sx={{mt:2}}>
-      <FormControl sx={{minWidth : 120}}>
-        <InputLabel id="demo-simple-select-label">Platform</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={platform}
-          label="Platform"
-          onChange={handleSelectChange}
-        >
-          <MenuItem value="Select Platform">Select Platform</MenuItem>
-          <MenuItem  value="codeforces">codeforces</MenuItem>
-          <MenuItem value="leetcode">leetcode</MenuItem>
-        </Select>
-      </FormControl>
-      </Box>
-      
-      {/* <p>{platform}</p> */}
+  <Box sx={{mt:2}}> 
+  <FormControl sx={{minWidth : 120}}>
+    <InputLabel id="demo-simple-select-label">Platform</InputLabel>
+    <Select
+      labelId="demo-simple-select-label"
+      id="demo-simple-select"
+      value={platform}
+      label="Platform"
+      onChange={handleSelectChange}
+    >
+      <MenuItem value="Select Platform">Select Platform</MenuItem>
+      <MenuItem value="codeforces">Codeforces</MenuItem>
+      <MenuItem value="leetcode">leetcode</MenuItem>
+    </Select>
+  </FormControl>
+  </Box>
+
+      {/*<p>{platform}</p>*/}
 
       {/* <input 
         type="text"
@@ -143,23 +144,26 @@ function App() {
         placeholder="Enter username"
         onChange={handleInputChange}
       /> */}
-      <Box sx={{mt:2}}>
+
+      <Box sx={{mt:3}}>
       <TextField label="Username" variant="outlined" onChange={handleInputChange}/>
       </Box>
 
       {/* <p>{userName}</p> */}
 
       {/* <button onClick={fetchProfile}>GET</button> */}
-      <Button variant="contained" onClick={fetchProfile} color="primary" sx={{mt:2}}>GET</Button>
+
+      <Button variant="contained" onClick={fetchProfile} sx={{mt:1}}>GET</Button>
 
       {
         (userProfile && platform === 'codeforces') && (
           <CardCodeforces userProfile={userProfile}/>
         )
       }
+
       {
         (userProfile && platform === 'leetcode') && (
-          <CardLeetcode userProfile={userProfile}/>
+        <CardLeetCode userProfile={userProfile}/>
         )
       } 
     </div>
