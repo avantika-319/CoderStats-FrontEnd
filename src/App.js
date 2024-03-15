@@ -1,5 +1,5 @@
 
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Button, Card, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
 import CardCodeforces from "./components/CardCodeforces";
@@ -7,16 +7,28 @@ import CardLeetCode from "./components/Cardleetcode";
 
 function App() {
   const URL = "https://coder-stats.vercel.app";
-  const [platform, setPlatform] = useState("Select Platform"); //which platform data to get
+  const [platform, setPlatform] = useState(""); //which platform data to get
   const [userName, setUsername] = useState("");
-  const [userProfile, setUserProfile] = useState(null);
+  const [userProfile, setUserProfile] = useState(
+    // {
+    // handle : "DraggerJd03", 
+    // maxRank : "expert",
+    // maxRating : 1652,
+    //     rank : "expert",
+    //     rating : 1652, 
+    //     friends : 19,
+    //     contests : 42,
+    //     questionSolved: 828,
+    // }
+    null
+    );
 
   //null -> explicitly null memory entity
   //empty array -> [] != null
   //empty object -> {} != null
-  const [userProfile, setUserProfile] = useState(null);
 
   const handleSelectChange = (event)=>{
+    setUserProfile(null);
     setPlatform(event.target.value)
   }
   
@@ -27,7 +39,8 @@ function App() {
   const fetchCodeforcesProfile = async()=>{
     try{
     const req_url = `${URL}/user/${platform}/${userName}`;
-    const url2= `${URL}/user/${platform}/${userName}/status`;
+    const questionStatus_url = `${URL}/user/${platform}/${userName}/status`;
+    const contest_url = `${URL}/user/${platform}/${userName}/rating`;
 
     const config={
       header:{
@@ -36,7 +49,11 @@ function App() {
     };
 
     const response = await axios.get(req_url,config); 
-    const response2 = await axios.get(url2,config); 
+    const response2 = await axios.get(questionStatus_url,config);
+    const response3 = await axios.get(contest_url, config);
+
+    const contests = response3.data.result.length;
+
     const status= response2.data.result;
 
     const questionSet = new Set();
@@ -55,6 +72,7 @@ function App() {
         maxRating,
         rank,
         rating, 
+        contests,
         friends : friendOfCount,
         questionSolved: solved,
       }
@@ -112,49 +130,30 @@ function App() {
   }
 
   return (
-    <div className="App">
-      {/*<select value={platform} onChange={handleSelectChange}>
-        <option value="Select Platform">Select Platform</option>
-        <option value="codeforces">codeforces</option>
-        <option value="leetcode">leetcode</option>
-  </select>*/}
-
-  <Box sx={{mt:2}}> 
-  <FormControl sx={{minWidth : 120}}>
-    <InputLabel id="demo-simple-select-label">Platform</InputLabel>
-    <Select
-      labelId="demo-simple-select-label"
-      id="demo-simple-select"
-      value={platform}
-      label="Platform"
-      onChange={handleSelectChange}
-    >
-      <MenuItem value="Select Platform">Select Platform</MenuItem>
-      <MenuItem value="codeforces">Codeforces</MenuItem>
-      <MenuItem value="leetcode">leetcode</MenuItem>
-    </Select>
-  </FormControl>
-  </Box>
-
-      {/*<p>{platform}</p>*/}
-
-      {/* <input 
-        type="text"
-        //value={username}
-        placeholder="Enter username"
-        onChange={handleInputChange}
-      /> */}
-
-      <Box sx={{mt:3}}>
-      <TextField label="Username" variant="outlined" onChange={handleInputChange}/>
-      </Box>
-
-      {/* <p>{userName}</p> */}
-
-      {/* <button onClick={fetchProfile}>GET</button> */}
-
+    <div className="App" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection:'column'}}>
+      <Typography variant="h4" fontWeight={"bold"} sx={{ mb:4}}>
+        Select Platform and user
+      </Typography>
+      <Card sx={{px:10, pb:10, py:2}}>
+      <Grid sx={{my:2}} spacing={3}> 
+        <FormControl sx={{minWidth : 120, mr:3}}>
+          <InputLabel id="demo-simple-select-label">Platform</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={platform}
+            label="Platform"
+            onChange={handleSelectChange}
+          >
+            <MenuItem value="Select Platform">Select Platform</MenuItem>
+            <MenuItem value="codeforces">Codeforces</MenuItem>
+            <MenuItem value="leetcode">leetcode</MenuItem>
+          </Select>
+        </FormControl>
+        
+        <TextField label="Username" variant="outlined" onChange={handleInputChange}/>
+      </Grid>
       <Button variant="contained" onClick={fetchProfile} sx={{mt:1}}>GET</Button>
-
       {
         (userProfile && platform === 'codeforces') && (
           <CardCodeforces userProfile={userProfile}/>
@@ -166,6 +165,7 @@ function App() {
         <CardLeetCode userProfile={userProfile}/>
         )
       } 
+      </Card>
     </div>
   );
 }
