@@ -3,7 +3,8 @@ import React from "react";
 import codeforces_logo from '../assets/images/logo.png';
 import { get_color} from "../utils/text_util";
 
-const CardRow = ({heading, data}) =>{
+const CardRow = (props) =>{
+    const {heading, data} = props;
     return (
         <Box style={{'display':'flex', 'flexDirection':'row', 'justifyContent':'space-between'}}>
             <Typography variant="h6">{heading}:</Typography> <Typography variant="h6"> {data} </Typography>
@@ -16,7 +17,7 @@ const CardCodeforces = (props) =>{
     const rankColor = get_color(userProfile?.rating)
     const maxRankColor = get_color(userProfile?.maxRating);
     return(
-        <Box sx={{mt:2, maxWidth:400}}>
+        <Box sx={{mt:2}}>
             <Box mb={1}> 
                 <Box style={{'display':'flex', 'flexDirection':'row', 'alignItems' : 'center'}}>
                     <img src={codeforces_logo} alt="codeforce-icon" style={{height : 22, marginRight:10}}/> 

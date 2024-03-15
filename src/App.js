@@ -4,24 +4,28 @@ import axios from "axios";
 import { useState } from "react";
 import CardCodeforces from "./components/CardCodeforces";
 import CardLeetCode from "./components/Cardleetcode";
+import Toast from "./components/Toast";
 
 function App() {
   const URL = "https://coder-stats.vercel.app";
   const [platform, setPlatform] = useState(""); //which platform data to get
   const [userName, setUsername] = useState("");
-  const [userProfile, setUserProfile] = useState(
-    // {
-    // handle : "DraggerJd03", 
-    // maxRank : "expert",
-    // maxRating : 1652,
-    //     rank : "expert",
-    //     rating : 1652, 
-    //     friends : 19,
-    //     contests : 42,
-    //     questionSolved: 828,
-    // }
-    null
-    );
+  const [userProfile, setUserProfile] = useState(null);
+
+  //Toast states : 
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastSeverity, setToastSeverity] = useState('success');
+
+  const handleToastOpen = (message, severity) => {
+    setToastMessage(message);
+    setToastSeverity(severity);
+    setToastOpen(true);
+  };
+
+  const handleToastClose = () => {
+      setToastOpen(false);
+  };
 
   //null -> explicitly null memory entity
   //empty array -> [] != null
@@ -77,10 +81,11 @@ function App() {
         questionSolved: solved,
       }
       setUserProfile(userData);
+      console.log(userProfile);
     }
     }catch(error)
     {
-      console.log(error);
+      handleToastOpen('Either platform or username is incorrect','error');
     }
   }
 
@@ -97,22 +102,22 @@ function App() {
       const response = await axios.get(req_url,config);
       const ratingRes = await axios.get(req_url2,config);
 
-      //rating/ranking dtaa
-
-      const ratingData = ratingRes.data.data;
-      const {userContestRanking} = ratingData;
-      const {attendedContestsCount, badge, rating} = userContestRanking;
-      console.log(attendedContestsCount, badge, rating);
-
       //general data
       const data = response.data.data.matchedUser;
       const {username, languageProblemCount,profile} = data;
       const {ranking, userAvatar} = profile;
       console.log(username,languageProblemCount,ranking,userAvatar); 
+
+      //rating/ranking dtaa
+      const ratingData = ratingRes.data.data;
+      const {userContestRanking} = ratingData;
+      const {attendedContestsCount, badge, rating} = userContestRanking;
+      // console.log(attendedContestsCount, badge, rating);
+
       setUserProfile({attendedContestsCount,badge,rating,ranking, userAvatar,username,languageProblemCount})
   }catch(error)
   {
-    console.log(error);
+    handleToastOpen('Either platform or username is incorrect','error');
   }
 }
 
@@ -125,16 +130,24 @@ function App() {
       fetchLeetcodeProfile();
     }
     else{
-      alert('Select platform')
+      setToastOpen('Select platform','error');
     }
   }
 
   return (
     <div className="App" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection:'column'}}>
+      
+      <Toast
+        open={toastOpen}
+        severity={toastSeverity}
+        message={toastMessage}
+        onClose={handleToastClose}
+      />
+
       <Typography variant="h4" fontWeight={"bold"} sx={{ mb:4}}>
         Select Platform and user
       </Typography>
-      <Card sx={{px:10, pb:10, py:2}}>
+      <Card sx={{px:10, py:2}}>
       <Grid sx={{my:2}} spacing={3}> 
         <FormControl sx={{minWidth : 120, mr:3}}>
           <InputLabel id="demo-simple-select-label">Platform</InputLabel>
@@ -147,7 +160,7 @@ function App() {
           >
             <MenuItem value="Select Platform">Select Platform</MenuItem>
             <MenuItem value="codeforces">Codeforces</MenuItem>
-            <MenuItem value="leetcode">leetcode</MenuItem>
+            <MenuItem value="leetcode">Leetcode</MenuItem>
           </Select>
         </FormControl>
         
