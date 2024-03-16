@@ -4,36 +4,36 @@ import leetcode_logo from '../assets/images/leetcode_logo.png'
 import { Chart as ChartJS } from 'chart.js/auto'
 import { Line } from "react-chartjs-2";
 
+//icons : 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMedal, faRankingStar, faTrophy } from "@fortawesome/free-solid-svg-icons";
+
 const CardRow = (props) =>{
-  const {heading, data, variant} = props;
+  const {heading, data, variant, icon} = props;
   return (
       <Box style={{'display':'flex', 'flexDirection':'row', 'justifyContent':'space-between'}}>
-          <Typography variant={variant}>{heading}:</Typography> <Typography variant={variant}> {data} </Typography>
+          <Typography variant={variant}> <FontAwesomeIcon icon={icon}/> {heading}: </Typography> <Typography variant={variant}> {data} </Typography>
       </Box>
   )
 }
-// Chart.register(CategoryScale);
-// ChartJS.register(LineElement, PointElement, LinearScale, Title);
-const Graph = ({graphData}) =>{
-  // console.log(graphData);
+
+const Graph = (props)=>{
+  const {graphData} = props;
   return (
-  <Box>
-    <Line
-      data={{
-        labels: graphData.map((data,index) => index+1),
-        datasets: [
-          {
-            data: graphData.map((item) => item.rating|0),
-            label: `Contest Rating`,
-            borderColor: 'black',
-            borderWidth : 1,
-            
-          },
-        ],
-        
-      }}
-      options={
-        {
+    <Box>
+      <Line
+        data={{
+          labels: graphData.map((item, index) => index+1),//X -axis
+          datasets : [
+            {
+              label : 'Contest Ranking',
+              data : graphData.map((item) => item.rating), //Y-axis
+              borderColor : 'black',
+              borderWidth: 1
+            }
+          ]
+        }}
+        options={{  
             fill: false,
             interaction: {
                 intersect: false
@@ -45,16 +45,15 @@ const Graph = ({graphData}) =>{
                     color: 'grey'
                   }
                 },
-              }
-        }
-      }
-    />
-  </Box>
-)}
+            }
+        }}
+      />
+    </Box>
+  )
+}
 
 const CardLeetCode = (props)=>{
     const {userProfile} = props;
-    
     return(
         <Box sx={{mt:2, maxWidth:400}}>
           {/* <Box style={{'display':'flex', 'flexDirection':'row'}}><Typography>Avatar:</Typography> <img src={userProfile.userAvatar} alt="avatar"/></Box> */}
@@ -71,9 +70,9 @@ const CardLeetCode = (props)=>{
                   </Box>
                 }
           </Box>
-          <CardRow heading="Rank" data={userProfile.ranking} variant="h6"/>
-          <CardRow heading="Rating" data={userProfile.rating|0} variant="h6"/>
-          <CardRow heading="Contests" data={userProfile.attendedContestsCount} variant="h6"/>
+          <CardRow heading="Rank" data={userProfile.ranking} variant="h6" icon={faRankingStar}/>
+          <CardRow heading="Rating" data={userProfile.rating|0} variant="h6" icon={faMedal}/>
+          <CardRow heading="Contests" data={userProfile.attendedContestsCount} variant="h6" icon={faTrophy}/>
           <Graph graphData={userProfile.rankingHistory}/>
           <Card sx={{p:1, mt:1}}>
             <Typography variant="h6" mb={1}>Languages</Typography>

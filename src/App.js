@@ -56,8 +56,8 @@ function App() {
     const response2 = await axios.get(questionStatus_url,config);
     const response3 = await axios.get(contest_url, config);
 
-    const contests = response3.data.result.length;
     const rankingHistory = response3.data.result;
+    const contests = rankingHistory.length;
 
     const status= response2.data.result;
 
