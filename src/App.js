@@ -3,7 +3,7 @@ import { Button, Card, FormControl, Grid, InputLabel, MenuItem, Select, TextFiel
 import axios from "axios";
 import { useState } from "react";
 import CardCodeforces from "./components/CardCodeforces";
-import CardLeetCode from "./components/CardLeetcode";
+import CardLeetCode from "./components/Cardleetcode";
 import Toast from "./components/Toast";
 
 function App() {
