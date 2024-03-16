@@ -2,6 +2,8 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import codeforces_logo from '../assets/images/logo.png';
 import { get_color} from "../utils/text_util";
+import { Chart as ChartJS } from 'chart.js/auto'
+import { Line } from "react-chartjs-2";
 
 const CardRow = (props) =>{
     const {heading, data} = props;
@@ -11,6 +13,44 @@ const CardRow = (props) =>{
         </Box>
     )
 }
+
+const Graph = ({graphData}) =>{
+    // console.log(graphData);
+    return (
+    <Box>
+      <Line
+        data={{
+          labels: graphData.map((data,index) => index+1),
+          datasets: [
+            {
+              data: graphData.map((item) => item.newRating),
+              label: `Contest Rating`,
+              borderColor: 'black',
+              borderWidth : 1,
+              
+            },
+          ],
+          
+        }}
+        options={
+          {
+              fill: false,
+              interaction: {
+                  intersect: false
+              },
+              radius: 0,
+              scales: {
+                  y: {
+                    grid: {
+                      color: 'grey'
+                    }
+                  },
+                }
+          }
+        }
+      />
+    </Box>
+)}
 
 const CardCodeforces = (props) =>{
     const {userProfile} = props;
@@ -41,6 +81,7 @@ const CardCodeforces = (props) =>{
                 <CardRow heading='Friends of' data={userProfile.friends}/>
                 <CardRow heading='Questions Solved' data={userProfile.questionSolved}/>
             </Box>
+            <Graph graphData={userProfile.rankingHistory}/>
         </Box>
     )
 }

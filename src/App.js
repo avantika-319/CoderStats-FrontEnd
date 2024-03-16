@@ -57,6 +57,7 @@ function App() {
     const response3 = await axios.get(contest_url, config);
 
     const contests = response3.data.result.length;
+    const rankingHistory = response3.data.result;
 
     const status= response2.data.result;
 
@@ -79,9 +80,10 @@ function App() {
         contests,
         friends : friendOfCount,
         questionSolved: solved,
+        rankingHistory
       }
       setUserProfile(userData);
-      console.log(userProfile);
+      // console.log(userProfile);
     }
     }catch(error)
     {
@@ -106,15 +108,18 @@ function App() {
       const data = response.data.data.matchedUser;
       const {username, languageProblemCount,profile} = data;
       const {ranking, userAvatar} = profile;
-      console.log(username,languageProblemCount,ranking,userAvatar); 
-
+     
       //rating/ranking dtaa
       const ratingData = ratingRes.data.data;
-      const {userContestRanking} = ratingData;
+      const {userContestRanking, userContestRankingHistory} = ratingData;
       const {attendedContestsCount, badge, rating} = userContestRanking;
       // console.log(attendedContestsCount, badge, rating);
 
-      setUserProfile({attendedContestsCount,badge,rating,ranking, userAvatar,username,languageProblemCount})
+      const rankingHistory = userContestRankingHistory.filter((item)=>{
+        return item.attended === true;
+      })
+
+      setUserProfile({attendedContestsCount,badge,rating,ranking, userAvatar,username,languageProblemCount,rankingHistory})
   }catch(error)
   {
     handleToastOpen('Either platform or username is incorrect','error');
@@ -135,7 +140,7 @@ function App() {
   }
 
   return (
-    <div className="App" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection:'column'}}>
+    <div className="App" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection:'column'}}>
       
       <Toast
         open={toastOpen}
