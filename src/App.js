@@ -141,7 +141,6 @@ function App() {
 
   return (
     <div className="App" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection:'column'}}>
-      
       <Toast
         open={toastOpen}
         severity={toastSeverity}
@@ -149,10 +148,10 @@ function App() {
         onClose={handleToastClose}
       />
 
-      <Typography variant="h4" fontWeight={"bold"} sx={{ mb:4}}>
+      <Typography variant="h4" fontWeight={"bold"} sx={{my:3}}>
         Select Platform and user
       </Typography>
-      <Card sx={{px:10, py:2}}>
+      <Card sx={{px:10, py:2, mb:5}}>
       <Grid sx={{my:2}} spacing={3}> 
         <FormControl sx={{minWidth : 120, mr:3}}>
           <InputLabel id="demo-simple-select-label">Platform</InputLabel>

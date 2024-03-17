@@ -4,6 +4,8 @@ import leetcode_logo from '../assets/images/leetcode_logo.png'
 import { Chart as ChartJS } from 'chart.js/auto'
 import { Line } from "react-chartjs-2";
 
+import { grey } from "../theme/palette";
+
 //icons : 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMedal, faRankingStar, faTrophy } from "@fortawesome/free-solid-svg-icons";
@@ -20,7 +22,7 @@ const CardRow = (props) =>{
 const Graph = (props)=>{
   const {graphData} = props;
   return (
-    <Box>
+    <Box mt={3}>
       <Line
         data={{
           labels: graphData.map((item, index) => index+1),//X -axis
@@ -74,7 +76,7 @@ const CardLeetCode = (props)=>{
           <CardRow heading="Rating" data={userProfile.rating|0} variant="h6" icon={faMedal}/>
           <CardRow heading="Contests" data={userProfile.attendedContestsCount} variant="h6" icon={faTrophy}/>
           <Graph graphData={userProfile.rankingHistory}/>
-          <Card sx={{p:1, mt:1}}>
+          <Card sx={{p:1, mt:1, backgroundColor:grey[200]}}>
             <Typography variant="h6" mb={1}>Languages</Typography>
           <>
           {
