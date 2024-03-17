@@ -56,7 +56,8 @@ function App() {
     const response2 = await axios.get(questionStatus_url,config);
     const response3 = await axios.get(contest_url, config);
 
-    const contests = response3.data.result.length;
+    const rankingHistory = response3.data.result;
+    const contests = rankingHistory.length;
 
     const status= response2.data.result;
 
@@ -79,9 +80,10 @@ function App() {
         contests,
         friends : friendOfCount,
         questionSolved: solved,
+        rankingHistory
       }
       setUserProfile(userData);
-      console.log(userProfile);
+      // console.log(userProfile);
     }
     }catch(error)
     {
@@ -106,15 +108,18 @@ function App() {
       const data = response.data.data.matchedUser;
       const {username, languageProblemCount,profile} = data;
       const {ranking, userAvatar} = profile;
-      console.log(username,languageProblemCount,ranking,userAvatar); 
-
+     
       //rating/ranking dtaa
       const ratingData = ratingRes.data.data;
-      const {userContestRanking} = ratingData;
+      const {userContestRanking, userContestRankingHistory} = ratingData;
       const {attendedContestsCount, badge, rating} = userContestRanking;
       // console.log(attendedContestsCount, badge, rating);
 
-      setUserProfile({attendedContestsCount,badge,rating,ranking, userAvatar,username,languageProblemCount})
+      const rankingHistory = userContestRankingHistory.filter((item)=>{
+        return item.attended === true;
+      })
+
+      setUserProfile({attendedContestsCount,badge,rating,ranking, userAvatar,username,languageProblemCount,rankingHistory})
   }catch(error)
   {
     handleToastOpen('Either platform or username is incorrect','error');
@@ -135,8 +140,7 @@ function App() {
   }
 
   return (
-    <div className="App" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection:'column'}}>
-      
+    <div className="App" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection:'column'}}>
       <Toast
         open={toastOpen}
         severity={toastSeverity}
@@ -144,10 +148,10 @@ function App() {
         onClose={handleToastClose}
       />
 
-      <Typography variant="h4" fontWeight={"bold"} sx={{ mb:4}}>
+      <Typography variant="h4" fontWeight={"bold"} sx={{my:3}}>
         Select Platform and user
       </Typography>
-      <Card sx={{px:10, py:2}}>
+      <Card sx={{px:10, py:2, mb:5}}>
       <Grid sx={{my:2}} spacing={3}> 
         <FormControl sx={{minWidth : 120, mr:3}}>
           <InputLabel id="demo-simple-select-label">Platform</InputLabel>

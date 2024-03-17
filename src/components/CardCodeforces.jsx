@@ -2,15 +2,56 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import codeforces_logo from '../assets/images/logo.png';
 import { get_color} from "../utils/text_util";
+import { Chart as ChartJS } from 'chart.js/auto';
+import { Line } from "react-chartjs-2";
+
+//icons : 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMedal, faRankingStar, faTrophy, faUserGroup, faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
 const CardRow = (props) =>{
-    const {heading, data} = props;
+    const {heading, data,icon} = props;
     return (
         <Box style={{'display':'flex', 'flexDirection':'row', 'justifyContent':'space-between'}}>
-            <Typography variant="h6">{heading}:</Typography> <Typography variant="h6"> {data} </Typography>
+            <Typography variant="h6"><FontAwesomeIcon icon={icon} style={{marginRight : 10}}/>{heading}:</Typography> <Typography variant="h6"> {data} </Typography>
         </Box>
     )
 }
+
+const Graph = (props)=>{
+    const {graphData} = props;
+    return (
+      <Box>
+        <Line
+          data={{
+            labels: graphData.map((item, index) => index+1),//X -axis
+            datasets : [
+              {
+                label : 'Contest Ranking',
+                data : graphData.map((item) => item.newRating), //Y-axis
+                borderColor : 'black',
+                borderWidth: 1
+              }
+            ]
+          }}
+          options={{  
+            fill: false,
+            interaction: {
+                intersect: false
+            },
+            radius: 0,
+            scales: {
+                y: {
+                  grid: {
+                    color: 'grey'
+                  }
+                },
+            }
+          }}
+        />
+      </Box>
+    )
+  }
 
 const CardCodeforces = (props) =>{
     const {userProfile} = props;
@@ -35,12 +76,13 @@ const CardCodeforces = (props) =>{
                 </Box>
             </Box>
             <Box>
-                <CardRow heading='Contest Rating' data={userProfile.rating}/>
-                <CardRow heading='Maximum Rating' data={userProfile.maxRating}/>
-                <CardRow heading='Contests' data={userProfile.contests}/>
-                <CardRow heading='Friends of' data={userProfile.friends}/>
-                <CardRow heading='Questions Solved' data={userProfile.questionSolved}/>
+                <CardRow heading='Contest Rating' data={userProfile.rating} icon={faMedal}/>
+                <CardRow heading='Maximum Rating' data={userProfile.maxRating} icon={faRankingStar}/>
+                <CardRow heading='Contests' data={userProfile.contests} icon={faTrophy}/>
+                <CardRow heading='Friends of' data={userProfile.friends} icon={faUserGroup}/>
+                <CardRow heading='Questions Solved' data={userProfile.questionSolved} icon={faCircleCheck}/>
             </Box>
+            <Graph graphData={userProfile.rankingHistory}/>
         </Box>
     )
 }
