@@ -95,6 +95,8 @@ function App() {
     try{
       const req_url = `${URL}/user/${platform}/${userName}`;
       const req_url2 = `${URL}/user/${platform}/${userName}/rating`;
+      const req_url3 = `${URL}/user/${platform}/${userName}/solvedProblems`;
+
       const config={
         header:{
           "Content-Type" : "application/json",
@@ -103,13 +105,14 @@ function App() {
 
       const response = await axios.get(req_url,config);
       const ratingRes = await axios.get(req_url2,config);
+      const problemRes = await axios.get(req_url3,config);
 
       //general data
       const data = response.data.data.matchedUser;
       const {username, languageProblemCount,profile} = data;
       const {ranking, userAvatar} = profile;
      
-      //rating/ranking dtaa
+      //rating/ranking data
       const ratingData = ratingRes.data.data;
       const {userContestRanking, userContestRankingHistory} = ratingData;
       const {attendedContestsCount, badge, rating} = userContestRanking;
@@ -119,7 +122,11 @@ function App() {
         return item.attended === true;
       })
 
-      setUserProfile({attendedContestsCount,badge,rating,ranking, userAvatar,username,languageProblemCount,rankingHistory})
+      //problems data
+      const allProblems = problemRes.data.data.allQuestionsCount;
+      const problemData = problemRes.data.data.matchedUser.submitStatsGlobal.acSubmissionNum;
+
+      setUserProfile({attendedContestsCount,badge,rating,ranking,username,allProblems,problemData,rankingHistory})
   }catch(error)
   {
     handleToastOpen('Either platform or username is incorrect','error');
