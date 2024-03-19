@@ -7,7 +7,7 @@ import CardLeetCode from "./components/Cardleetcode";
 import Toast from "./components/Toast";
 
 function App() {
-  const URL = "https://coder-stats.vercel.app";
+  const URL = process.env.REACT_APP_SERVER_URL;
   const [platform, setPlatform] = useState(""); //which platform data to get
   const [userName, setUsername] = useState("");
   const [userProfile, setUserProfile] = useState(null);
