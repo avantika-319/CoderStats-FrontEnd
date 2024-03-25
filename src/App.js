@@ -1,16 +1,19 @@
 
-import { Button, Card, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CircularProgress, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
 import CardCodeforces from "./components/CardCodeforces";
 import CardLeetCode from "./components/Cardleetcode";
 import Toast from "./components/Toast";
+import { QueryStats } from "@mui/icons-material";
 
 function App() {
   const URL = process.env.REACT_APP_SERVER_URL;
-  const [platform, setPlatform] = useState(""); //which platform data to get
+  const [platform, setPlatform] = useState(null); //which platform data to get
   const [userName, setUsername] = useState("");
   const [userProfile, setUserProfile] = useState(null);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   //Toast states : 
   const [toastOpen, setToastOpen] = useState(false);
@@ -89,6 +92,9 @@ function App() {
     {
       handleToastOpen('Either platform or username is incorrect','error');
     }
+    finally{
+      setIsLoading(false);
+    }
   }
 
   const fetchLeetcodeProfile = async()=>{
@@ -131,10 +137,14 @@ function App() {
   {
     handleToastOpen('Either platform or username is incorrect','error');
   }
+  finally{
+    setIsLoading(false);
+  }
 }
 
   const fetchProfile =()=>{
     setUserProfile(null);
+    setIsLoading(true);
     if(platform === 'codeforces'){
       fetchCodeforcesProfile();
     }
@@ -142,7 +152,8 @@ function App() {
       fetchLeetcodeProfile();
     }
     else{
-      setToastOpen('Select platform','error');
+      handleToastOpen('Select Platform','error');
+      setIsLoading(false);
     }
   }
 
@@ -155,9 +166,12 @@ function App() {
         onClose={handleToastClose}
       />
 
-      <Typography variant="h4" fontWeight={"bold"} sx={{my:3}}>
-        Select Platform and user
+      <Box style={{display:'flex', alignItems:'center', justifyContent:'center'}} my={3}>
+      <Typography variant="h3" fontWeight={"bold"}>
+        Coder Stats 
       </Typography>
+      <QueryStats sx={{marginLeft:1, color:'#1877F2', fontSize: 30}} />
+      </Box>
       <Card sx={{px:10, py:2, mb:5}}>
       <Grid sx={{my:2}} spacing={3}> 
         <FormControl sx={{minWidth : 120, mr:3}}>
@@ -169,7 +183,6 @@ function App() {
             label="Platform"
             onChange={handleSelectChange}
           >
-            <MenuItem value="Select Platform">Select Platform</MenuItem>
             <MenuItem value="codeforces">Codeforces</MenuItem>
             <MenuItem value="leetcode">Leetcode</MenuItem>
           </Select>
@@ -178,6 +191,12 @@ function App() {
         <TextField label="Username" variant="outlined" onChange={handleInputChange}/>
       </Grid>
       <Button variant="contained" onClick={fetchProfile} sx={{mt:1}}>GET</Button>
+      {
+        isLoading && 
+        <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
+          <CircularProgress/>
+        </Box>
+      }
       {
         (userProfile && platform === 'codeforces') && (
           <CardCodeforces userProfile={userProfile}/>
