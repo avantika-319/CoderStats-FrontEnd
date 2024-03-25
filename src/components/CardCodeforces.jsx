@@ -50,7 +50,8 @@ const Graph = (props)=>{
             scales: {
                 y: {
                   grid: {
-                    color: 'grey'
+                    color: 'grey',
+                    lineWidth: 0.3,
                   }
                 },
                 x: {
