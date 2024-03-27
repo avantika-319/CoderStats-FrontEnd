@@ -157,15 +157,10 @@ function App() {
     }
   }
 
-  return (
-    <div className="App" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection:'column'}}>
-      <Toast
-        open={toastOpen}
-        severity={toastSeverity}
-        message={toastMessage}
-        onClose={handleToastClose}
-      />
-       <a
+  //component for github corner link 
+  const GithubRepo = ()=>{
+    return ( 
+    <a
         href="https://github.com/avantika-319/CoderStats-FrontEnd"
         title="Fork me on GitHub"
         class="github-corner"
@@ -193,6 +188,18 @@ function App() {
           ></path>
         </svg>
       </a>
+    )
+  }
+
+  return (
+    <div className="App" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection:'column'}}>
+      <Toast
+        open={toastOpen}
+        severity={toastSeverity}
+        message={toastMessage}
+        onClose={handleToastClose}
+      />
+      <GithubRepo/>
       <Box style={{display:'flex', alignItems:'center', justifyContent:'center'}} my={3}>
       <Typography variant="h3" fontWeight={"bold"}>
         Coder Stats 
